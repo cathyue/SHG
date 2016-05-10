@@ -32,7 +32,7 @@ C = 740;    %J/(kgK)
 D = 9.5e-7; %m2/s
 
 Qab1 = 7e8;
-Qab2 = 2e10;    %from Rokhsari_APL_2004, Fig.2
+Qab2 = 2e10;    %from Rokhsari_APL_2004, Fig.2 test
 
 
 
