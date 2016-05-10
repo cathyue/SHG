@@ -1,0 +1,11 @@
+function [ Aij ] = Aij_cal( R, k1, n1, l1, k2, n2, l2 )
+%UNTITLED2 此处显示有关此函数的摘要
+%   此处显示详细说明
+
+Int1_1 = Int1_cal(R, k1, n1, l1);
+Int1_2 = Int1_cal(R, k2, n2, l2);
+
+funin = @(r) (abs(phil(l1, n1.*k1.*r).*l1*(l1+1)./r.^2).^2+abs(l1.*n1.*k1./r.*(phil(l1-1, n1.*k1.*r)-l1./(n1.*k1.*r).*phil(l1, n1.*k1.*r))))
+
+end
+
