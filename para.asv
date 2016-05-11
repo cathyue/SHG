@@ -6,8 +6,6 @@ s0 = sqrt(1e-3);    %input 1mW
 % lam2 = lam1/2;  %suppose on resonance
 lam0 = [lam10; lam20];
 n0 = [n10; n20];
-w0 = [w10; w20];
-l0 = [l0; 2*l0];
 
 % input para:
 delt = 7.0649e+09; %from detuning.m
@@ -32,18 +30,21 @@ Q = 2*pi*c0./(lam0.*(ko+ke));
 
 n2 = [2.79e-20; 2.48e-20]; %m2/W, Review and assessment of measured values of the nonlinear refractive-index coefficient of fused silica David Milam
 kai3 = n2.*4.*n0.^2.*epsi0*c0/3;   %m2/V2
-% kai32 = n2_2*4*n20^2*epsi0*c0/3;    %m2/V2
+kai32 = n2_2*4*n20^2*epsi0*c0/3;    %m2/V2
 
 dndT = 8.7e-6;  %1/K
 rho = 2200; %kg/m3
 C = 740;    %J/(kgK)
 D = 9.5e-7; %m2/s
 
-Qab = [7e8; 2e10];  %from Rokhsari_APL_2004, Fig.2
+Qab1 = 7e8;
+Qab2 = 2e10;    %from Rokhsari_APL_2004, Fig.2
 
-b = [1.7e-6;sqrt(1.08^2+1)*1e-6];    %m, estimated from phil(l,x)
+b1 = 1.7e-6;    %m, estimated from phil(l,x)
+b2 = sqrt(1.08^2+1)*1e-6;
 
-dthet = 2*D./(b.^2);
+dthet1 = 2*D/(b1^2);
+dthet2 = 2*D/(b2^2);
 
 
 
