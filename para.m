@@ -2,18 +2,11 @@ load sample.mat;
 % tunable:
 dw = 0;
 s0 = sqrt(1e-3);    %input 1mW
-% lam1 = 1.55e-6;     %m
-% lam2 = lam1/2;  %suppose on resonance
 lam0 = [lam10; lam20];
 n0 = [n10; n20];
 w0 = [w10; w20];
 l0 = [l0; 2*l0];
-
-% input para:
-delt = 7.0649e+09; %from detuning.m
-kmm = -2.0953e-10 - 8.8476e+05i; %from kappa_cal.m
-% n1 = n10;   %from n_lam.m
-% n2 = n20;   
+delt = w0(2)-w0(1)*2; %from detuning.m
 
 % constant:
 c0 = 299792458; %m/s
@@ -21,33 +14,58 @@ Z0 = 376.73;    %free space resistance
 epsi0 = 8.854188e-12;   %F/m
 
 % material para:
-% ko1 = 3e6; %Hz
-% ke1 = 3e6; %Hz
-% ko2 = 6e6; %Hz
-% ke2 = 6e6; 
 ko = [3e6; 6e6];%Hz, corresponding to Q~2e8
 ke = [3e6; 6e6];
 Q = 2*pi*c0./(lam0.*(ko+ke));
-% Q2 = 2*pi*c0/(lam20*(ko2+ke2));
 
+%Kerr nonlinearity
 n2 = [2.79e-20; 2.48e-20]; %m2/W, Review and assessment of measured values of the nonlinear refractive-index coefficient of fused silica David Milam
 kai3 = n2.*4.*n0.^2.*epsi0*c0/3;   %m2/V2
-% kai32 = n2_2*4*n20^2*epsi0*c0/3;    %m2/V2
 
+% Thermal nonlinearity
 dndT = 8.7e-6;  %1/K
 rho = 2200; %kg/m3
 C = 740;    %J/(kgK)
 D = 9.5e-7; %m2/s
-
 Qab = [7e8; 2e10];  %from Rokhsari_APL_2004, Fig.2
-
 b = [1.7e-6;sqrt(1.08^2+1)*1e-6];    %m, estimated from phil(l,x)
-
 dthet = 2*D./(b.^2);
 
+%Bij_cal
+B = zeros(2,2);
+for i = 1:2
+    for j = 1:2
+        Aij = Aij_cal(R, 2*pi/(lam0(i)), n0(i), l0(i), 2*pi/(lam0(j)), n0(j), l0(j));
+        
+        same_ = (i==j);
+        
+        B(i, j) = (3*(1+same_)*kai3(j)*w0(j)*Aij/n0(j)^2 ...
+            +epsi0*w0(j)/n0(j)*dndT/(rho*C*dthet(j))*n0(i)^2*w0(i)/Qab(i)*Aij)/(2/(epsi0*n0(j)^2));
+    end
+end
 
+% kappa & g cal
+kai_ttt = 59e-22; % m2/V, second order susceptibility, surface effective
+kai_tll = 3.8e-22;
+kai_llt = 7.9e-22;
+k0 = 2*pi./lam0;
+zl = hl(l0(1), k0(1)*R);
+drzl_dr = -l0(1)*hl(l0(1),k0(1)*R)+k0(1)*R*hl(l0(1)-1, k0(1)*R);
+Gmm = Gm(l0(2),k0(2)*R,n0(2));
 
+kmm = sqrt(2/Z0)*n0(1)^2*k0(1)^2*zl^2/(epsi0*n0(2)*R*Gmm)*(kai_ttt-1/(l0(1)*zl)^2*(drzl_dr)^2*kai_tll)...
+    *sqrt(l0(1)/(4*pi))*0.5;
 
+% sq cal, to change from kmm (PRA2008) to g
+sq = [0;0];
+for ksq = 1:2
+    sq(ksq) = k0(ksq)*l0(ksq)*phil(l0(ksq), n0(ksq).*k0(ksq).*R)*sqrt(c0) ...
+        /(sqrt(Int1_cal(R, k0(ksq), n0(ksq), l0(ksq)))*kail(l0(ksq), k0(ksq).*R));
+end
+
+g = [0;0];
+g(1) = conj(kmm)*sq(2)*conj(sq(1))/sq(1);
+g(2) = kmm*sq(1)^2/sq(2);
 
 
 
