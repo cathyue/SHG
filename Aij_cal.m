@@ -11,15 +11,15 @@ funin = @(r) (abs(phil(l1, n1.*k1.*r).*l1*(l1+1)./r.^2).^2....
 .*(abs(phil(l2, n2.*k2.*r).*l2*(l2+1)./r.^2).^2....
 +abs(l2.*n2.*k2./r.*(phil(l2-1, n2.*k2.*r)-l2./(n2.*k2.*r).*phil(l2, n2.*k2.*r))).^2).*r.^2;
 
-A1 = phil(l1, n1.*k1.*R)./kail(l1, k1.*R);
-A2 = phil(l2, n2.*k2.*R)./kail(l2, k2.*R);
+A1 = n1^2*phil(l1, n1.*k1.*R)./kail(l1, k1.*R);
+A2 = n2^2*phil(l2, n2.*k2.*R)./kail(l2, k2.*R);
 
 funout = @(r) (abs(A1.*kail(l1, k1.*r).*l1*(l1+1)./r.^2).^2....
 +abs(l1.*k1./r.*(A1.*kail(l1-1, k1.*r)-l1./(k1.*r).*A1.*kail(l1,k1.*r))).^2)...
 .*(abs(A2.*kail(l2, k2.*r).*l2*(l2+1)./r.^2).^2....
 +abs(l2.*k2./r.*(A2.*kail(l2-1, k2.*r)-l2./(k2.*r).*A2.*kail(l2, k2.*r))).^2).*r.^2;
 
-IntS = integral(funin, 0, R) + integral(funout, R, R+2*pi/k1*10);
+IntS = integral(funin, 0, R) + integral(funout, R, R+2*pi/k1*20);
 
 Aij = sqrt(l1.*l2).*2.*IntS.*sqrt(pi./((l1+l2)))./(pi^2.*epsi0^2.*n1.^2.*n2.^2.*Int1_1.*Int1_2);
 end
