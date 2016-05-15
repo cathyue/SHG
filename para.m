@@ -1,7 +1,6 @@
 load sample.mat;
-% tunable:
-dw = 0;
-s0 = sqrt(1e-3);    %input 1mW
+
+% from sample.mat, close to on resonance condition
 lam0 = [lam10; lam20];
 n0 = [n10; n20];
 w0 = [w10; w20];
@@ -12,11 +11,6 @@ delt = w0(2)-w0(1)*2; %from detuning.m
 c0 = 299792458; %m/s
 Z0 = 376.73;    %free space resistance
 epsi0 = 8.854188e-12;   %F/m
-
-% material para:
-ko = [3e6; 6e6];%Hz, corresponding to Q~2e8
-ke = [3e6; 6e6];
-Q = 2*pi*c0./(lam0.*(ko+ke));
 
 %Kerr nonlinearity
 n2 = [2.79e-20; 2.48e-20]; %m2/W, Review and assessment of measured values of the nonlinear refractive-index coefficient of fused silica David Milam
@@ -49,23 +43,25 @@ kai_ttt = 59e-22; % m2/V, second order susceptibility, surface effective
 kai_tll = 3.8e-22;
 kai_llt = 7.9e-22;
 k0 = 2*pi./lam0;
-zl = hl(l0(1), k0(1)*R);
-drzl_dr = -l0(1)*hl(l0(1),k0(1)*R)+k0(1)*R*hl(l0(1)-1, k0(1)*R);
-Gmm = Gm(l0(2),k0(2)*R,n0(2));
+zl = (1+n0(1))./2.*jl(l0(1), n0(1).*k0(1)*R);
+drzl_dr = 0.5.*(n0(1).*k0(1).*R.*jl(l0(1)-1, n0(1).*k0(1).*R) ...
+    -l0(1).*(1+n0(1).^2).*jl(l0(1),n0(1).*k0(1).*R) ...
+    +n0(1).^2.*k0(1)*R.*jl(l0(1), n0(1).*k0(1).*R).*hl(l0(1)-1, k0(1).*R)./hl(l0(1), k0(1).*R));
+Gmm = Gm2(l0(2),k0(2)*R,n0(2));
 
 kmm = sqrt(2/Z0)*n0(1)^2*k0(1)^2*zl^2/(epsi0*n0(2)*R*Gmm)*(kai_ttt-1/(l0(1)*zl)^2*(drzl_dr)^2*kai_tll)...
     *sqrt(l0(1)/(4*pi))*0.5;
 
-% sq cal, to change from kmm (PRA2008) to g
-sq = [0;0];
-for ksq = 1:2
-    sq(ksq) = k0(ksq)*l0(ksq)*phil(l0(ksq), n0(ksq).*k0(ksq).*R)*sqrt(c0) ...
-        /(sqrt(Int1_cal(R, k0(ksq), n0(ksq), l0(ksq)))*kail(l0(ksq), k0(ksq).*R));
-end
-
-g = [0;0];
-g(1) = conj(kmm)*sq(2)*conj(sq(1))/sq(1);
-g(2) = kmm*sq(1)^2/sq(2);
+% % sq cal, to change from kmm (PRA2008) to g
+% sq = [0;0];
+% for ksq = 1:2
+%     sq(ksq) = k0(ksq)*l0(ksq)*phil(l0(ksq), n0(ksq).*k0(ksq).*R)*sqrt(c0) ...
+%         /(sqrt(Int1_cal(R, k0(ksq), n0(ksq), l0(ksq)))*kail(l0(ksq), k0(ksq).*R));
+% end
+% 
+% g = [0;0];
+% g(1) = conj(kmm)*sq(2)*conj(sq(1))/sq(1);
+% g(2) = kmm*sq(1)^2/sq(2);
 
 
 

@@ -21,6 +21,6 @@ funout = @(r) (abs(A1.*kail(l1, k1.*r).*l1*(l1+1)./r.^2).^2....
 
 IntS = integral(funin, 0, R) + integral(funout, R, R+2*pi/k1*10);
 
-Aij = sqrt(l1.*l2).*2.*IntS.*sqrt(pi./(2.*(l1+l2)))./(pi^2.*epsi0^2.*n1.^2.*n2.^2.*Int1_1.*Int1_2);
+Aij = sqrt(l1.*l2).*2.*IntS.*sqrt(pi./((l1+l2)))./(pi^2.*epsi0^2.*n1.^2.*n2.^2.*Int1_1.*Int1_2);
 end
 
