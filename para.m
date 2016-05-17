@@ -1,3 +1,4 @@
+%   para.m
 load sample.mat;
 
 % from sample.mat, close to on resonance condition
