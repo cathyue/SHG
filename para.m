@@ -35,7 +35,8 @@ for i = 1:2
         same_ = (i==j);
         
         B(i, j) = (3*(1+same_)*kai3(j)*w0(j)*Aij/n0(j)^2 ...
-            +epsi0*w0(j)/n0(j)*dndT/(rho*C*dthet(j))*n0(i)^2*w0(i)/Qab(i)*Aij)/(2/(epsi0*n0(j)^2));
+            + 0*epsi0*w0(j)/n0(j)*dndT/(rho*C*dthet(j))*n0(i)^2*w0(i)/Qab(i)*Aij)/(2/(epsi0*n0(j)^2));
+    %change here to preserve only the Kerr effect
     end
 end
 
