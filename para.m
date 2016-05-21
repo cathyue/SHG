@@ -18,13 +18,13 @@ n2 = [2.79e-20; 2.48e-20]; %m2/W, Review and assessment of measured values of th
 kai3 = n2.*4.*n0.^2.*epsi0*c0/3;   %m2/V2
 
 % Thermal nonlinearity
-dndT = 8.7e-6;  %1/K
+dndT = 6e-6;  %1/K
 rho = 2200; %kg/m3
 C = 740;    %J/(kgK)
 D = 9.5e-7; %m2/s
 Qab = [7e8; 2e10];  %from Rokhsari_APL_2004, Fig.2
 b = [1.7e-6;sqrt(1.08^2+1)*1e-6];    %m, estimated from phil(l,x)
-dthet = 2*D./(b.^2);
+dthet = 2*D./(b.^2)./124.54/2;    %emperical value
 
 %Bij_cal
 B = zeros(2,2);
@@ -35,8 +35,7 @@ for i = 1:2
         same_ = (i==j);
         
         B(i, j) = (3*(1+same_)*kai3(j)*w0(j)*Aij/n0(j)^2 ...
-            + 0*epsi0*w0(j)/n0(j)*dndT/(rho*C*dthet(j))*n0(i)^2*w0(i)/Qab(i)*Aij)/(2/(epsi0*n0(j)^2));
-    %change here to preserve only the Kerr effect
+            + epsi0*w0(j)/n0(j)*dndT/(rho*C*dthet(j))*n0(i)^2*w0(i)/Qab(i)*Aij)/(2/(epsi0*n0(j)^2));
     end
 end
 
