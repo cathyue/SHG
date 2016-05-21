@@ -1,5 +1,5 @@
 %   para.m
-load sample.mat;
+load sample2.mat;
 
 % from sample.mat, close to on resonance condition
 lam0 = [lam10; lam20];
@@ -46,8 +46,8 @@ kai_llt = 7.9e-22;
 k0 = 2*pi./lam0;
 zl = (1+n0(1))./2.*jl(l0(1), n0(1).*k0(1)*R);
 drzl_dr = 0.5.*(n0(1).*k0(1).*R.*jl(l0(1)-1, n0(1).*k0(1).*R) ...
-    -l0(1).*(1+n0(1).^2).*jl(l0(1),n0(1).*k0(1).*R) ...
-    +n0(1).^2.*k0(1)*R.*jl(l0(1), n0(1).*k0(1).*R).*hl(l0(1)-1, k0(1).*R)./hl(l0(1), k0(1).*R));
+            -l0(1).*(1+n0(1).^2).*jl(l0(1),n0(1).*k0(1).*R) ...
+            +n0(1).^2.*k0(1)*R.*jl(l0(1), n0(1).*k0(1).*R).*hl(l0(1)-1, k0(1).*R)./hl(l0(1), k0(1).*R));
 Gmm = Gm2(l0(2),k0(2)*R,n0(2));
 
 kmm = c0*n0(1)^2*k0(1)^4*zl^2*l0(1)/(sqrt(2*epsi0)*n0(2)*R*Gmm*k0(2)) ...
