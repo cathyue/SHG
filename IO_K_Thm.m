@@ -16,7 +16,7 @@ a0 = sqrt(ke).*s0./((ko+ke)./2);
 a0 = a0.*[1; 0];
 a0(2) = kmm*a0(1)^2/((ko(2)+ke(2))/2);
 % kmm = 0;
-sweep = 3.5e10:2e8:4e10;
+sweep = 3.5e10:0.5e8:4e10;
 % B = 0.*B;
 % delt = 0;
 theta0 = [0; 0];
@@ -25,7 +25,7 @@ x = [real(a0(1)), imag(a0(1)), real(a0(2)), imag(a0(2))];
 P1 = zeros(length(sweep),1);
 P2 = zeros(length(sweep),1);
 flag = zeros(length(sweep), 1);
-options = optimoptions('fsolve','MaxFunEval', 1600,'MaxIter', 1600);
+options = optimoptions('fsolve','MaxFunEval', 2400,'MaxIter', 800);
 for kw = 1:length(sweep)
     dw = sweep(kw);
     %     if kw<84
@@ -36,11 +36,12 @@ for kw = 1:length(sweep)
     x0 = x;
     %     exitflag = -1;
     [func_final, fval, exitflag, output] = fsolve(@(x) NL_K_Thm(x, kmm, delt, dw, ke, ko, B, s0), x0, options);
-    flag(kw) = exitflag;
-    if exitflag <0
+    
+    if abs(func_final(1)^2+func_final(2)^2)>=a0(1)^2
         x0 = 0.*x;
         [func_final, fval, exitflag, output] = fsolve(@(x) NL_K_Thm(x, kmm, delt, dw, ke, ko, B, s0), x0, options);
     end
+    flag(kw) = exitflag;
     a = [func_final(1)+1i*func_final(2); func_final(3)+1i*func_final(4)];
     Pout = abs(a.*sqrt(ke)).^2;
     P1(kw) = Pout(1);
